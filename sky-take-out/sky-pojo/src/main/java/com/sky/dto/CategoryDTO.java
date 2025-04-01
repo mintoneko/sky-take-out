@@ -7,7 +7,7 @@ import java.io.Serializable;
 @Data
 public class CategoryDTO implements Serializable {
 
-    //主键
+    //主键->修改人id
     private Long id;
 
     //类型 1 菜品分类 2 套餐分类

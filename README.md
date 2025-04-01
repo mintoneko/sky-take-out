@@ -154,6 +154,8 @@ System.out.println("当前线程id: " + Thread.currentThread().getId());
 
 定位到：`com.sky.context.BaseContext.java`，这里封装好了相关功能
 
+> 通过线程传递修改人的id，该方法后续也能使用到
+
 ### 员工分页查询
 
 #### 分析和设计
@@ -162,7 +164,7 @@ System.out.println("当前线程id: " + Thread.currentThread().getId());
 
 > 将Query统一封装到PageResult
 
-Control层创建接口：修改EmployeeController --> Service层数据转换：DTO->VO --> 利用持久层mapper：编写SQL代码
+Control层创建接口：修改EmployeeController --> Service层创建接口实现：直接利用EmployeePageQueryDTO --> 利用持久层mapper：编写SQL代码
 
 ```java
 // select * from employee limit 1, 10
@@ -170,6 +172,8 @@ Control层创建接口：修改EmployeeController --> Service层数据转换：D
 ```
 
 通过MybatsX插件实现mapper到xml到映射警告，辅助编程
+
+借助`PageHelper`
 
 #### 代码完善
 
@@ -179,3 +183,52 @@ Control层创建接口：修改EmployeeController --> Service层数据转换：D
 
 单一处理方式 vs 统一处理方式
 
+借助`JsonFormat`和配置`WebMvcConfiguration`
+
+### 启用禁用员工账号
+
+```java
+public Result startOrStop(@PathVariable Integer status, Long id) // 注意这里@PathVariable获取路径参数
+```
+
+| 参数名称 | 参数说明 | 请求类型 | 是否必须 | 数据类型       |
+| :------- | :------- | :------- | :------- | :------------- |
+| status   | status   | path     | true     | integer(int32) |
+| id       | id       | query    | false    | integer(int64) |
+
+### 根据id查询员工信息
+
+稍微比较简单
+
+Control层创建接口：修改EmployeeController --> Service层创建接口实现：直接利用Employee--> 利用持久层mapper：编写SQL代码
+
+### 编辑员工账号
+
+利用之前的启用禁用员工信息是创建的动态SQL
+
+### 菜品分类
+
+业务规则：
+
+- 分类名称必须是唯一的
+- 分类分为“菜品分类“和”套餐分类“
+- 新增分类为禁用状态
+
+接口：
+
+- 新增分类
+- 分类分页查询
+- 根据ID删除分类
+- 修改分类
+- 启用/禁用分类
+- 根据类型查询分类
+
+> 代码逻辑和员工管理几乎一致，跳过
+
+## 3.菜品管理
+
+### 公共字段管理
+
+![image-20250401221054527](images/image-20250401221054527.png)
+
+![image-20250401221211194](images/image-20250401221211194.png)

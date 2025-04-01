@@ -82,7 +82,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
   }
 
   /**
-   * 拓展Spring MVC框架的消息转换器
+   * 拓展Spring MVC框架的消息转换器,实现向前端发送时间的格式化
    *
    * @param converters
    */

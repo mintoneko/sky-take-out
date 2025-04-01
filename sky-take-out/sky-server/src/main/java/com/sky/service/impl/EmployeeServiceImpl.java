@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
@@ -29,6 +30,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
   @Autowired
   private EmployeeMapper employeeMapper;
+  @Autowired
+  private EmployeeService employeeService;
 
   /**
    * 员工登录
@@ -92,7 +95,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     // 设置更新时间
     employee.setUpdateTime(LocalDateTime.now());
 
-    // TODO:创建人id和修改人id
     // 设置创建人
     employee.setCreateUser(BaseContext.getCurrentId());
 
@@ -112,5 +114,53 @@ public class EmployeeServiceImpl implements EmployeeService {
     long total = page.getTotal();
     List<Employee> employees = page.getResult();
     return new PageResult(total, employees);
+  }
+
+
+  /**
+   * 启用禁用员工账号
+   *
+   * @param status
+   * @param id
+   * @return
+   */
+  @Override
+  public void startOrStop(Integer status, Long id) {
+    // update employee set status = ? where id = ?
+    Employee employee = Employee.builder()
+            .id(id)
+            .status(status)
+            .updateTime(LocalDateTime.now())
+            .updateUser(BaseContext.getCurrentId()) // 通过线程传递修改人的ID
+            .build();
+    employeeMapper.update(employee);
+  }
+
+  /*
+   * 根据id查询员工信息
+   *
+   * @param id
+   * @return
+   */
+  @Override
+  public Employee getById(Long id) {
+    Employee employee = employeeMapper.getById(id);
+    employee.setPassword("******");
+    return employee;
+  }
+
+  /**
+   * 修改员工信息
+   *
+   * @param employeeDTO
+   * @return
+   */
+  @Override
+  public void update(EmployeeDTO employeeDTO) {
+    Employee employee = new Employee();
+    BeanUtils.copyProperties(employeeDTO, employee);
+    employee.setUpdateTime(LocalDateTime.now());
+    employee.setUpdateUser(BaseContext.getCurrentId());
+    employeeMapper.update(employee);
   }
 }
