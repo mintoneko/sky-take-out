@@ -10,18 +10,20 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>sky-pojo</artifactId>
     <dependencies>
-        <!--lombok-->
+        <!--Lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <!--mybatis-->
+
+        <!--MyBatis-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.9.2</version>
         </dependency>
-        <!--knife4j-->
+
+        <!--Knife4j-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>

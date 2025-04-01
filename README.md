@@ -120,11 +120,62 @@ EmployeeLoginVO.java
 
 ### 新增员工
 
-创建接口：修改EmployeeController --> 数据转换：DTO->VO --> 利用持久层mapper：编写SQL代码
+#### 分析和设计
+
+Control层创建接口：修改EmployeeController --> Service层数据转换：DTO->VO --> 利用持久层mapper：编写SQL代码
 
 大概就是这么个逻辑，不过注意JWT拦截器，Swegger测试需要对用token处理
 
-### 代码完善
+#### 代码完善
 
-1. 用户名重复异常处理
-2. 新增员工的创建人id和修改人id需要完善
+- 用户名重复异常处理
+
+利用全局异常捕获器`GlobalExceptionHandler`获取异常，然后直接log和return->return利用Result范型类
+
+- 新增员工的创建人id和修改人id需要完善
+
+![image-20250331222006790](images/image-20250331222006790.png)
+
+```java
+package com.sky.interceptor;
+```
+
+查看`JwtTokenAdminInterceptor`这个拦截器或者生成JWT的代码能够更加深入理解JWT机制
+
+想要向Service传递这个id，有点类似于前端的全局状态管理
+
+![image-20250331224710825](images/image-20250331224710825.png)
+
+```java
+System.out.println("当前线程id: " + Thread.currentThread().getId());
+```
+
+可见，客户端的每次请求都是一个线程。客户端刷新，线程id++
+
+定位到：`com.sky.context.BaseContext.java`，这里封装好了相关功能
+
+### 员工分页查询
+
+#### 分析和设计
+
+根据页码展示员工信息+每页展示10条数据+分页查询时，可根据需要进行姓名查询
+
+> 将Query统一封装到PageResult
+
+Control层创建接口：修改EmployeeController --> Service层数据转换：DTO->VO --> 利用持久层mapper：编写SQL代码
+
+```java
+// select * from employee limit 1, 10
+// 如果这样做需要手动管理数据，借用Spring提供的插件PageHelper，底层原理是MyBatis对sql的limit结果进行拼接
+```
+
+通过MybatsX插件实现mapper到xml到映射警告，辅助编程
+
+#### 代码完善
+
+- 日期格式化
+
+![image-20250401095606666](images/image-20250401095606666.png)
+
+单一处理方式 vs 统一处理方式
+
